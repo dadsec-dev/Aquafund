@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -54,7 +54,7 @@ model Project {
   evidences       Evidence[]      
 
   location        Location?       @relation(fields: [locationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  locationId      String?         @unique // ✅ One-to-one relation uniqueness
+  locationId      String?         @unique 
 
   @@index([status])
   @@index([creatorId])
