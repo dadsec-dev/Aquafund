@@ -12,3 +12,111 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum ProjectStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  COMPLETED
+}
+
+model User {
+  id            String      @id @default(cuid())
+  name          String
+  email         String      @unique
+  password      String
+  role          String      @default("USER")
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relations
+  projects      Project[]   @relation("ProjectCreator")
+  donations     Donation[]
+}
+
+model Project {
+  id              String          @id @default(cuid())
+  title           String
+  description     String
+  images          String[]
+  fundingGoal     Float
+  raisedAmount    Float           @default(0)
+  status          ProjectStatus   @default(PENDING)
+  metadataHash    String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  creator         User            @relation("ProjectCreator", fields: [creatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  creatorId       String
+
+  donations       Donation[]     
+  evidences       Evidence[]      
+
+  location        Location?       @relation(fields: [locationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  locationId      String?         @unique // ✅ One-to-one relation uniqueness
+
+  @@index([status])
+  @@index([creatorId])
+  @@index([createdAt])
+}
+
+model Donation {
+  id              String      @id @default(cuid())
+  donor           User        @relation(fields: [donorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  donorId         String
+
+  project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projectId       String
+
+  amount          Float
+  txHash          String?
+  timestamp       DateTime    @default(now())
+  cached          Boolean     @default(false)
+
+  @@index([projectId])
+  @@index([donorId])
+  @@index([txHash])
+}
+
+model Evidence {
+  id              String      @id @default(cuid())
+  project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projectId       String
+
+  ipfsHash        String?
+  fileType        String?
+  description     String?
+  uploadedAt      DateTime    @default(now())
+  verified        Boolean     @default(false)
+
+  @@index([projectId])
+}
+
+model Location {
+  id          String      @id @default(cuid())
+  address     String
+  city        String
+  state       String
+  country     String
+  latitude    Float?
+  longitude   Float?
+
+  // 1:1 relation with Project
+  project     Project?
+
+  @@index([city])
+  @@index([state])
+}
+
+model AnalyticsCache {
+  id              String          @id @default(cuid())
+  totalFunds      Float           @default(0)
+  totalProjects   Int             @default(0)
+  completedProjects Int           @default(0)
+  donorsCount     Int             @default(0)
+  updatedAt       DateTime        @updatedAt
+  createdAt       DateTime        @default(now())
+
+  @@index([updatedAt])
+}
