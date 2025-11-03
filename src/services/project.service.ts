@@ -17,3 +17,4 @@ class ProjectService {
 // DELETE - /api/projects/:id - Delete a project (admin only).
 
 }
+export default new ProjectService();
