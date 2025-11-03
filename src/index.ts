@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import './types/express.types'; 
-// import router from './routes/indexRoutes';
+import router from './routes/index.route';
 
 dotenv.config();
 
@@ -18,7 +18,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// app.use('/api', router);
+app.use('/api', router);
 
 
 app.listen(PORT, () => {
