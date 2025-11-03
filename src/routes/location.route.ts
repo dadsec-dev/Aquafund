@@ -3,11 +3,19 @@ import locationController from "../controllers/location.controller";
 
 const router = Router();
 
-router.post("/", (req, res) => locationController.create(req, res));
-router.get("/", (req, res) => locationController.list(req, res));
-router.get("/:id", (req, res) => locationController.getById(req, res));
-router.put("/:id", (req, res) => locationController.update(req, res));
-router.delete("/:id", (req, res) => locationController.remove(req, res));
+const {
+  create: createLocation,
+  list: getAllLocations,
+  getById: getLocationById,
+  update: updateLocation,
+  remove: deleteLocation,
+} = locationController;
+
+router.post("/", createLocation);
+router.get("/", getAllLocations);
+router.get("/:id", getLocationById);
+router.put("/:id", updateLocation);
+router.delete("/:id", deleteLocation);
 
 export default router;
 
