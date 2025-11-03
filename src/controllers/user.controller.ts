@@ -13,7 +13,7 @@ class UserController {
         }
     }
 
-    async list(req: Request, res: Response) {
+    async listUsers(req: Request, res: Response) {
         try {
             const users = await userService.listUsers();
             return res.json({ success: true, data: users });
@@ -33,7 +33,7 @@ class UserController {
         }
     }
 
-    async update(req: Request, res: Response) {
+    async updateUser(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const data = req.body as Prisma.UserUpdateInput;
@@ -46,7 +46,7 @@ class UserController {
         }
     }
 
-    async remove(req: Request, res: Response) {
+    async removeUser(req: Request, res: Response) {
         try {
             const { id } = req.params;
             const deleted = await userService.deleteUser(id);

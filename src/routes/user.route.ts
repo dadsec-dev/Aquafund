@@ -3,12 +3,12 @@ import userController from "../controllers/user.controller";
 
 const router = Router();
 
-router.post("/", (req, res) => userController.create(req, res));
-router.get("/", (req, res) => userController.list(req, res));
-router.get("/:id", (req, res) => userController.getById(req, res));
-router.put("/:id", (req, res) => userController.update(req, res));
-router.delete("/:id", (req, res) => userController.remove(req, res));
+const { create: createUser, listUsers: getAllUsers, getById: getUserById, updateUser: updateUser, removeUser: deleteUser } = userController;
+
+router.post("/", createUser);
+router.get("/", getAllUsers);
+router.get("/:id", getUserById);
+router.put("/:id", updateUser);
+router.delete("/:id", deleteUser);
 
 export default router;
-
-
