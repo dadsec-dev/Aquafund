@@ -20,18 +20,24 @@ enum ProjectStatus {
   COMPLETED
 }
 
+enum UserRole {
+  USER
+  ADMIN
+  NGO
+}
+
 model User {
   id            String      @id @default(cuid())
   name          String
   email         String      @unique
-  password      String
+  wallet        String?       @unique
+  companyName   String?       
   role          String      @default("USER")
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   // Relations
   projects      Project[]   @relation("ProjectCreator")
-  donations     Donation[]
 }
 
 model Project {
@@ -49,9 +55,7 @@ model Project {
   // Relations
   creator         User            @relation("ProjectCreator", fields: [creatorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   creatorId       String
-
-  donations       Donation[]     
-  evidences       Evidence[]      
+  
 
   location        Location?       @relation(fields: [locationId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   locationId      String?         @unique 
@@ -61,37 +65,7 @@ model Project {
   @@index([createdAt])
 }
 
-model Donation {
-  id              String      @id @default(cuid())
-  donor           User        @relation(fields: [donorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  donorId         String
 
-  project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  projectId       String
-
-  amount          Float
-  txHash          String?
-  timestamp       DateTime    @default(now())
-  cached          Boolean     @default(false)
-
-  @@index([projectId])
-  @@index([donorId])
-  @@index([txHash])
-}
-
-model Evidence {
-  id              String      @id @default(cuid())
-  project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  projectId       String
-
-  ipfsHash        String?
-  fileType        String?
-  description     String?
-  uploadedAt      DateTime    @default(now())
-  verified        Boolean     @default(false)
-
-  @@index([projectId])
-}
 
 model Location {
   id          String      @id @default(cuid())
@@ -107,16 +81,4 @@ model Location {
 
   @@index([city])
   @@index([state])
-}
-
-model AnalyticsCache {
-  id              String          @id @default(cuid())
-  totalFunds      Float           @default(0)
-  totalProjects   Int             @default(0)
-  completedProjects Int           @default(0)
-  donorsCount     Int             @default(0)
-  updatedAt       DateTime        @updatedAt
-  createdAt       DateTime        @default(now())
-
-  @@index([updatedAt])
 }
