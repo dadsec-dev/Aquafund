@@ -16,6 +16,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
