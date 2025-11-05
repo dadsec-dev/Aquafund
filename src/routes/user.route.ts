@@ -15,46 +15,85 @@ const { create: createUser, listUsers: getAllUsers, getById: getUserById, update
  *   name: User
  *   description: User management
  */
-
 /**
  * @swagger
- * /users:
+ * /api/v1/users:
  *   post:
- *     summary: Create a new user
+ *     summary: Register a new user
  *     tags: [User]
- *     description: Creates a new user in the system. This route is public and does not require authentication.
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/CreateUserInput'
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "John doe"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "johndoe@example.com"
+ *               wallet:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "0xA8fB91e47cB94c2F805454543b19AfF23e29c1"
+ *               companyName:
+ *                 type: string
+ *                 nullable: true
+ *                 example: "Garry Technology"
+ *               role:
+ *                 type: string
+ *                 enum: [USER, ADMIN]
+ *                 example: "USER"
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User successfully created
  *         content:
  *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
  *             examples:
  *               success:
  *                 value:
- *                   id: "clx123abcde7890"
- *                   name: "John Doe"
- *                   email: "john@example.com"
- *                   wallet: "0x78385671254jdj72348"
- *                   companyName: "Acme Corp"
+ *                   id: "clx7f8392k3pa01q3v9b20d8c"
+ *                   name: "John doe"
+ *                   email: "Johndoe@example.com"
+ *                   wallet: "0xA8fB91e47cB94c2F805454543b19AfF23e29c1"
+ *                   companyName: "Garry Technology"
  *                   role: "USER"
- *                   createdAt: "2025-09-01T12:34:56Z"
- *                   updatedAt: "2025-09-01T12:34:56Z"
+ *                   createdAt: "2025-11-05T12:34:56Z"
+ *                   updatedAt: "2025-11-05T12:34:56Z"
  *       400:
- *         description: Invalid request body
- *       409:
- *         description: Email or wallet already exists
+ *         description: Invalid request payload
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Email is already registered."
+ *       500:
+ *         description: Server error while creating user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Internal server error."
  */
 router.post("/users", validate(createUserSchema, "body"), createUser);
 
 /**
  * @swagger
- * /users:
+ * /api/v1/users:
  *   get:
  *     summary: Get all users
  *     tags: [User]
@@ -94,7 +133,7 @@ router.get("/users", getAllUsers);
 
 /**
  * @swagger
- * /users/{id}:
+ * api/v1/users/{id}:
  *   get:
  *     summary: Get user by ID
  *     tags: [User]
@@ -134,7 +173,7 @@ router.get("/users/:id", validate(idParamSchema, "params"), getUserById);
 
 /**
  * @swagger
- * /users/{id}:
+ * api/v1/users/{id}:
  *   put:
  *     summary: Update user
  *     tags: [User]
@@ -182,7 +221,7 @@ router.put("/users/:id", validate(idParamSchema, "params"),   validate(updateUse
 
 /**
  * @swagger
- * /users/{id}:
+ * api/v1/users/{id}:
  *   delete:
  *     summary: Delete user
  *     tags: [User]
