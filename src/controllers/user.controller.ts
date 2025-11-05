@@ -1,13 +1,27 @@
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import userService from "../services/user.service";
+import { createUserSchema } from "../utils/user.validation";
+
 
 class UserController {
     async create(req: Request, res: Response) {
         try {
-            const data = req.body as Prisma.UserCreateInput;
-            const user = await userService.createUser(data);
+            const data = req.body
+            const { name, email, wallet, companyName } = data;
+
+            if (!name || !email || !wallet || !companyName) {
+                return res.status(400).json({ error: "Missing required fields." });
+            }
+            const user = await userService.createUser({
+                name,
+                email,
+                wallet,
+                companyName,
+            });
+
             return res.status(201).json({ success: true, data: user });
+
         } catch (error: any) {
             return res.status(400).json({ success: false, message: error.message || "Failed to create user" });
         }
@@ -21,7 +35,7 @@ class UserController {
             return res.status(500).json({ success: false, message: "Failed to list users" });
         }
     }
-
+ 
     async getById(req: Request, res: Response) {
         try {
             const { id } = req.params;

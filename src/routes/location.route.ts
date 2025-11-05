@@ -1,5 +1,10 @@
 import { Router } from "express";
 import locationController from "../controllers/location.controller";
+import { requireAuth } from "../middleware/auth";
+import { idParamSchema } from "../utils/params.validation";
+import { validate } from "../utils/base.validation";
+import { createLocationSchema, updateLocationSchema } from "../utils/location.validation";
+
 
 const router = Router();
 
@@ -11,12 +16,21 @@ const {
   remove: deleteLocation,
 } = locationController;
 
-router.post("/", createLocation);
-router.get("/", getAllLocations);
-router.get("/:id", getLocationById);
-router.put("/:id", updateLocation);
-router.delete("/:id", deleteLocation);
+router.post(
+  "/locations",
+  // requireAuth,
+  validate(createLocationSchema, "body"),
+  createLocation
+);
+router.get("/locations", getAllLocations);
+router.get("/locations/:id", validate(idParamSchema, "params"), getLocationById);
+router.put(
+  "/locations/:id",
+  // requireAuth,
+  validate(idParamSchema, "params"),
+  validate(updateLocationSchema, "body"),
+  updateLocation
+);
+router.delete("/locations/:id", validate(idParamSchema, "params"), deleteLocation);
 
 export default router;
-
-
