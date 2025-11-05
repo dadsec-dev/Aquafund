@@ -252,4 +252,35 @@ router.put("/users/:id", validate(idParamSchema, "params"),   validate(updateUse
  */
 router.delete("/users/:id", validate(idParamSchema, "params"), deleteUser);
 
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *         email:
+ *           type: string
+ *           format: email
+ *         wallet:
+ *           type: string
+ *           nullable: true
+ *         companyName:
+ *           type: string
+ *           nullable: true
+ *         role:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+
 export default router;
