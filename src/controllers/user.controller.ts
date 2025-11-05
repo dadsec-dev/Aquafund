@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Prisma } from "@prisma/client";
 import userService from "../services/user.service";
-import { createUserSchema } from "../utils/user.validation";
+import { createUserSchema } from "../utils/validation/user.validation";
 
 
 class UserController {

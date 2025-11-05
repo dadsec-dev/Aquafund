@@ -1,9 +1,9 @@
 import { Router } from "express";
 import locationController from "../controllers/location.controller";
 import { requireAuth } from "../middleware/auth";
-import { idParamSchema } from "../utils/params.validation";
-import { validate } from "../utils/base.validation";
-import { createLocationSchema, updateLocationSchema } from "../utils/location.validation";
+import { idParamSchema } from "../utils/validation/params.validation";
+import { validate } from "../utils/validation/base.validation";
+import { createLocationSchema, updateLocationSchema } from "../utils/validation/location.validation";
 
 
 const router = Router();
