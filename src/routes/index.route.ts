@@ -5,10 +5,8 @@ import locationRoutes from "./location.route";
 
 const router = Router();
 
-router.use("/users", userRoutes);
-router.use("/projects", projectRoutes);
-router.use("/locations", locationRoutes);
+router.use("/v1", userRoutes);
+router.use("/v1", projectRoutes);
+router.use("/v1", locationRoutes);
 
 export default router;
-
-

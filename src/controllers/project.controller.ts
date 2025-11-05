@@ -3,6 +3,8 @@ import { Prisma, ProjectStatus } from "@prisma/client";
 import projectService from "../services/project.service";
 
 class ProjectController {
+    
+    // create a project
     async create(req: Request, res: Response) {
         try {
             const data = req.body as Prisma.ProjectCreateInput;
@@ -13,6 +15,7 @@ class ProjectController {
         }
     }
 
+    //lists all the projects
     async list(req: Request, res: Response) {
         try {
             const { status, city, creatorId, search } = req.query;
@@ -28,6 +31,7 @@ class ProjectController {
         }
     }
 
+    //get a project by Id
     async getById(req: Request, res: Response) {
         try {
             const { id } = req.params;
@@ -39,6 +43,7 @@ class ProjectController {
         }
     }
 
+    //update a project by id
     async update(req: Request, res: Response) {
         try {
             const { id } = req.params;
@@ -52,6 +57,7 @@ class ProjectController {
         }
     }
 
+    //update the status of the project
     async changeStatus(req: Request, res: Response) {
         try {
             const { id } = req.params;
@@ -65,6 +71,7 @@ class ProjectController {
         }
     }
 
+    // delete a project
     async remove(req: Request, res: Response) {
         try {
             const { id } = req.params;
