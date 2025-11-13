@@ -182,14 +182,13 @@ router.get("/users/:id", validate(idParamSchema, "params"), getUserById);
  *     security:
  *       - bearerAuth: []
  *     parameters:
- *       - name: address
+ *       - name: wallet
  *         in: path
  *         required: true
  *         description: The wallet address of the user
  *         schema:
  *           type: string
- *           example: "0x53d284357ec70cE289D6D64134DfAc8E511c8a3D
-"
+ *           example: "0x53d284357ec70cE289D6D64134DfAc8E511c8a3D"
  *     responses:
  *       200:
  *         description: User retrieved successfully
@@ -199,9 +198,9 @@ router.get("/users/:id", validate(idParamSchema, "params"), getUserById);
  *               success:
  *                 value:
  *                   id: "clx123abcde7890"
- *                   name: "John Doe "
+ *                   name: "John Doe"
  *                   email: "johndoe@example.com"
- *                   wallet: "0x53d284357ec70cE289D6D64134DfAc8E511c8a3D
+ *                   wallet: "0x53d284357ec70cE289D6D64134DfAc8E511c8a3D"
  *                   companyName: "Garry Technology"
  *                   role: "ADMIN"
  *                   createdAt: "2025-09-01T12:34:56Z"
