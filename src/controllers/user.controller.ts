@@ -47,6 +47,23 @@ class UserController {
         }
     }
 
+
+    async getByWallet(req: Request, res: Response) {
+
+        try {
+            const { wallet } = req.params;
+            const user = await userService.getUserByWalletAddress(wallet);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        return res.json({ success: true, data: user });
+        } catch (error: any) {
+            console.error("Error fetching user by wallet:", error);
+            return res.status(500).json({ success: false, message: "Failed to fetch user" });
+        }
+    }
+
+
     async updateUser(req: Request, res: Response) {
         try {
             const { id } = req.params;
