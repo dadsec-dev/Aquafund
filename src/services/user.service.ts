@@ -28,6 +28,11 @@ class UserService {
         return user;
     }
 
+    async getUserByWalletAddress(wallet: string): Promise<User | null> {
+        const user = await prisma.user.findUnique({ where: { wallet: wallet } });
+        return user;
+    }
+
     async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<User> {
         try {
             const updated = await prisma.user.update({ where: { id }, data });

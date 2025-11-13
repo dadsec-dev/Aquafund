@@ -1,13 +1,13 @@
 import { Router } from "express";
 import userController from "../controllers/user.controller";
 import { requireAuth } from "../middleware/auth";
-import { idParamSchema } from "../utils/validation/params.validation";
+import { idParamSchema, walletParamSchema } from "../utils/validation/params.validation";
 import { validate } from "../utils/validation/base.validation";
 import { createUserSchema, updateUserSchema } from "../utils/validation/user.validation";
 
 
 const router = Router();
-const { create: createUser, listUsers: getAllUsers, getById: getUserById, updateUser: updateUser, removeUser: deleteUser } = userController;
+const { create: createUser, listUsers: getAllUsers, getById: getUserById, updateUser: updateUser, removeUser: deleteUser, getByWallet:getUserByWallet } = userController;
 
 /**
  * @swagger
@@ -170,6 +170,52 @@ router.get("/users", getAllUsers);
  *         description: User not found
  */
 router.get("/users/:id", validate(idParamSchema, "params"), getUserById);
+
+
+/**
+ * @swagger
+ * /api/v1/users/wallet/{wallet}:
+ *   get:
+ *     summary: Get user by wallet address
+ *     tags: [User]
+ *     description: Retrieves a user using their wallet address. Accessible by the user themselves or admin.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - name: address
+ *         in: path
+ *         required: true
+ *         description: The wallet address of the user
+ *         schema:
+ *           type: string
+ *           example: "0x53d284357ec70cE289D6D64134DfAc8E511c8a3D
+"
+ *     responses:
+ *       200:
+ *         description: User retrieved successfully
+ *         content:
+ *           application/json:
+ *             examples:
+ *               success:
+ *                 value:
+ *                   id: "clx123abcde7890"
+ *                   name: "John Doe "
+ *                   email: "johndoe@example.com"
+ *                   wallet: "0x53d284357ec70cE289D6D64134DfAc8E511c8a3D
+ *                   companyName: "Garry Technology"
+ *                   role: "ADMIN"
+ *                   createdAt: "2025-09-01T12:34:56Z"
+ *                   updatedAt: "2025-09-01T12:34:56Z"
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden - Not allowed
+ *       404:
+ *         description: User not found
+ */
+router.get("/users/wallet/:wallet", validate(walletParamSchema, "params"), getUserByWallet);
+
+
 
 /**
  * @swagger
