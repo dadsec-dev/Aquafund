@@ -17,22 +17,6 @@ model User {
   companyName String?
   wallet      String?   @unique
   projects    Project[] @relation("ProjectCreator")
-  notifications Notification[]
-}
-
-model Notification {
-  id          String    @id @default(cuid())
-  userId      String
-  title       String
-  message     String
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
-
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  @@index([userId])
-  @@index([isRead])
-  @@index([createdAt])
 }
 
 
@@ -49,7 +33,7 @@ model Project {
   updatedAt    DateTime      @updatedAt
   creatorId    String
   locationId   String?       @unique
-  creator      User          @relation("ProjectCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creator      User          @relation("ProjectCreator", fields: [creatorId], references: [wallet], onDelete: Cascade)
   location     Location?     @relation(fields: [locationId], references: [id])
 
   @@index([status])
