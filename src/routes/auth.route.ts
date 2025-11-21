@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth.controller";
+import { validate } from "../utils/validation/base.validation";
+import { loginSchema } from "../utils/validation/user.validation";
 
 const router = Router();
 
@@ -92,5 +94,80 @@ router.post("/send-otp", AuthController.sendOTP);
  *                   example: "Code expired"
  */
 router.post("/verify-otp", AuthController.verifyOTP);
+
+/**
+ * @swagger
+ * /api/v1/login:
+ *   post:
+ *     summary: Login with email and password
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "supersecret"
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: string
+ *                         email:
+ *                           type: string
+ *                         role:
+ *                           type: string
+ *                         status:
+ *                           type: string
+ *                         createdAt:
+ *                           type: string
+ *                           format: date-time
+ *                         updatedAt:
+ *                           type: string
+ *                           format: date-time
+ *                     token:
+ *                       type: string
+ *                       description: JWT token for authenticated requests
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       401:
+ *         description: Invalid credentials or account not verified
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid email or password"
+ */
+router.post("/login", validate(loginSchema, "body"), AuthController.login);
 
 export default router;

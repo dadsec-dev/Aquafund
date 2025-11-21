@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { OTPService } from "./otp.service";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -22,5 +24,34 @@ export class AuthService {
     });
 
     return "Account verified successfully";
+  }
+
+  static async login(email: string, password: string) {
+    // Find user by email
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error("Invalid email or password");
+
+    // Check if account is approved
+    if (user.status !== "APPROVED") {
+      throw new Error("Account not verified. Please verify your email first.");
+    }
+
+    // Verify password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) throw new Error("Invalid email or password");
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "7d" }
+    );
+
+    // Return user data (without password) and token
+    const { password: _, ...userWithoutPassword } = user;
+    return {
+      user: userWithoutPassword,
+      token,
+    };
   }
 }
