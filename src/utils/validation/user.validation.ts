@@ -11,3 +11,8 @@ export const updateUserSchema = Joi.object({
   password: Joi.string().min(8).trim().optional(),
   role: Joi.string().valid("USER", "ADMIN", "NGO").optional()
 });
+
+export const loginSchema = Joi.object({
+  email: Joi.string().email().trim().required(),
+  password: Joi.string().required()
+});

@@ -21,4 +21,14 @@ export class AuthController {
       return res.status(400).json({ error: error.message });
     }
   }
+
+  static async login(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      const result = await AuthService.login(email, password);
+      return res.json({ success: true, data: result });
+    } catch (error: any) {
+      return res.status(401).json({ success: false, error: error.message });
+    }
+  }
 }
