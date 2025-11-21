@@ -28,9 +28,8 @@ class UserService {
         return user;
     }
 
-    async getUserByWalletAddress(wallet: string): Promise<User | null> {
-        const user = await prisma.user.findUnique({ where: { wallet: wallet } });
-        return user;
+    async getUserByEmail(email: string): Promise<User | null> {
+        return prisma.user.findUnique({ where: { email } });
     }
 
     async updateUser(id: string, data: Prisma.UserUpdateInput): Promise<User> {
