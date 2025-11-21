@@ -27,8 +27,12 @@ export class AuthService {
   }
 
   static async login(email: string, password: string) {
+    // Trim email and password for consistency
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+
     // Find user by email
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: trimmedEmail } });
     if (!user) throw new Error("Invalid email or password");
 
     // Check if account is approved
@@ -37,7 +41,7 @@ export class AuthService {
     }
 
     // Verify password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcrypt.compare(trimmedPassword, user.password);
     if (!isPasswordValid) throw new Error("Invalid email or password");
 
     // Generate JWT token

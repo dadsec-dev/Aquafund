@@ -19,6 +19,8 @@ export const createNgoSchema = Joi.object({
   // Org Doc fields
   orgCountryOfOperation: Joi.string().optional().allow(null, ""),
   orgEmailAddress: Joi.string().email().optional().allow(null, ""),
+  orgDescription: Joi.string().optional().allow(null, ""),
+  orgImages: Joi.array().items(Joi.string()).optional(),
 
   // Wallet & status
   connectedWallet: Joi.string().optional().allow(null, ""),
@@ -43,6 +45,8 @@ export const updateNgoSchema = Joi.object({
   contactPersonEmailAddress: Joi.string().email().optional().allow(null, ""),
   orgCountryOfOperation: Joi.string().optional().allow(null, ""),
   orgEmailAddress: Joi.string().email().optional().allow(null, ""),
+  orgDescription: Joi.string().optional().allow(null, ""),
+  orgImages: Joi.array().items(Joi.string()).optional(),
   connectedWallet: Joi.string().optional().allow(null, ""),
   statusVerification: Joi.string().valid("PENDING", "APPROVED", "REJECTED").optional(),
 });

@@ -172,6 +172,13 @@ router.delete("/ngos/:id", validate(idParamSchema, "params"), remove);
  *         orgEmailAddress:
  *           type: string
  *           nullable: true
+ *         orgDescription:
+ *           type: string
+ *           nullable: true
+ *         orgImages:
+ *           type: array
+ *           items:
+ *             type: string
  *         connectedWallet:
  *           type: string
  *           nullable: true
@@ -231,6 +238,12 @@ router.delete("/ngos/:id", validate(idParamSchema, "params"), remove);
  *           type: string
  *         orgEmailAddress:
  *           type: string
+ *         orgDescription:
+ *           type: string
+ *         orgImages:
+ *           type: array
+ *           items:
+ *             type: string
  *         connectedWallet:
  *           type: string
  *         statusVerification:
