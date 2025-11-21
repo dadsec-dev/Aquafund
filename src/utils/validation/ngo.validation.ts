@@ -25,9 +25,6 @@ export const createNgoSchema = Joi.object({
   // Wallet & status
   connectedWallet: Joi.string().optional().allow(null, ""),
   statusVerification: Joi.string().valid("PENDING", "APPROVED", "REJECTED").optional(),
-
-  // Relations
-  userId: Joi.string().required(),
 });
 
 export const updateNgoSchema = Joi.object({
