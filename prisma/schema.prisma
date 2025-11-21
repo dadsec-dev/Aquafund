@@ -42,6 +42,8 @@ model NGO {
   // Organization Document fields
   orgCountryOfOperation   String?
   orgEmailAddress         String?
+  orgDescription          String?
+  orgImages               String[]
 
   // Wallet field
   connectedWallet         String?
