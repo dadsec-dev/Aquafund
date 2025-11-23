@@ -3,6 +3,7 @@ import ngoController from "../controllers/ngo.controller";
 import { validate } from "../utils/validation/base.validation";
 import { createNgoSchema, updateNgoSchema } from "../utils/validation/ngo.validation";
 import { idParamSchema } from "../utils/validation/params.validation";
+import { requireAuth } from "../middleware/auth";
 const router = Router();
 const { create, list, getById, update, remove } = ngoController;
 
@@ -19,6 +20,8 @@ const { create, list, getById, update, remove } = ngoController;
  *   post:
  *     summary: Register a new NGO
  *     tags: [NGO]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -35,7 +38,7 @@ const { create, list, getById, update, remove } = ngoController;
  *       400:
  *         description: Validation error
  */
-router.post("/ngos", validate(createNgoSchema, "body"), create);
+router.post("/ngos", requireAuth, validate(createNgoSchema, "body"), create);
 
 /**
  * @swagger
@@ -86,6 +89,8 @@ router.get("/ngos/:id", validate(idParamSchema, "params"), getById);
  *   put:
  *     summary: Update NGO details
  *     tags: [NGO]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -106,7 +111,7 @@ router.get("/ngos/:id", validate(idParamSchema, "params"), getById);
  *       404:
  *         description: NGO not found
  */
-router.put("/ngos/:id", validate(idParamSchema, "params"), validate(updateNgoSchema, "body"), update);
+router.put("/ngos/:id", requireAuth, validate(idParamSchema, "params"), validate(updateNgoSchema, "body"), update);
 
 /**
  * @swagger
@@ -114,6 +119,8 @@ router.put("/ngos/:id", validate(idParamSchema, "params"), validate(updateNgoSch
  *   delete:
  *     summary: Delete an NGO
  *     tags: [NGO]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -126,7 +133,7 @@ router.put("/ngos/:id", validate(idParamSchema, "params"), validate(updateNgoSch
  *       404:
  *         description: NGO not found
  */
-router.delete("/ngos/:id", validate(idParamSchema, "params"), remove);
+router.delete("/ngos/:id", requireAuth, validate(idParamSchema, "params"), remove);
 
 /**
  * @swagger
@@ -204,7 +211,6 @@ router.delete("/ngos/:id", validate(idParamSchema, "params"), remove);
  *         - emailAddress
  *         - missionStatement
  *         - websiteOrSocialLinks
- *         - userId
  *     UpdateNgoInput:
  *       type: object
  *       description: Fields allowed when updating an NGO
