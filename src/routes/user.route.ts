@@ -39,7 +39,7 @@ const { create: createUser, listUsers: getAllUsers, getById: getUserById, update
  *                 example: "supersecret"
  *               role:
  *                 type: string
- *                 enum: [USER, ADMIN, NGO]
+ *                 enum: [ NGO, USER, ADMIN,]
  *     responses:
  *       201:
  *         description: User successfully created
