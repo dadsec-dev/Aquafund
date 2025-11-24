@@ -20,7 +20,7 @@ class UserController {
             const user = await userService.createUser({
                 email: trimmedEmail,
                 password: hashedPassword,
-                role: role || "USER",
+                role: role || "NGO",
             });
 
             return res.status(201).json({ success: true, data: user });
