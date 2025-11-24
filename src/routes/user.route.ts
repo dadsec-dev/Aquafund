@@ -18,8 +18,8 @@ const { create: createUser, listUsers: getAllUsers, getById: getUserById, update
  * @swagger
  * /api/v1/users:
  *   post:
- *     summary: Register a new user
- *     tags: [User]
+ *     summary: Register a new user 
+ *     tags: [NGO]
  *     requestBody:
  *       required: true
  *       content:
