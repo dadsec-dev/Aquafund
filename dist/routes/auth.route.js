@@ -1,10 +1,10 @@
-import { Router } from "express";
-import { AuthController } from "../controllers/auth.controller";
-import { validate } from "../utils/validation/base.validation";
-import { loginSchema, forgotPasswordSchema, resetPasswordSchema } from "../utils/validation/user.validation";
-
-const router = Router();
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_controller_1 = require("../controllers/auth.controller");
+const base_validation_1 = require("../utils/validation/base.validation");
+const user_validation_1 = require("../utils/validation/user.validation");
+const router = (0, express_1.Router)();
 /**
  * @swagger
  * /api/v1/send-otp:
@@ -47,8 +47,7 @@ const router = Router();
  *                   type: string
  *                   example: "User does not exist"
  */
-router.post("/send-otp", AuthController.sendOTP);
-
+router.post("/send-otp", auth_controller_1.AuthController.sendOTP);
 /**
  * @swagger
  * /api/v1/verify-otp:
@@ -95,8 +94,7 @@ router.post("/send-otp", AuthController.sendOTP);
  *                   type: string
  *                   example: "Code expired"
  */
-router.post("/verify-otp", AuthController.verifyOTP);
-
+router.post("/verify-otp", auth_controller_1.AuthController.verifyOTP);
 /**
  * @swagger
  * /api/v1/login:
@@ -171,8 +169,7 @@ router.post("/verify-otp", AuthController.verifyOTP);
  *                   type: string
  *                   example: "Invalid email or password"
  */
-router.post("/login", validate(loginSchema, "body"), AuthController.login);
-
+router.post("/login", (0, base_validation_1.validate)(user_validation_1.loginSchema, "body"), auth_controller_1.AuthController.login);
 /**
  * @swagger
  * /api/v1/forgot-password:
@@ -215,8 +212,7 @@ router.post("/login", validate(loginSchema, "body"), AuthController.login);
  *                   type: string
  *                   example: "User does not exist"
  */
-router.post("/forgot-password", validate(forgotPasswordSchema, "body"), AuthController.forgotPassword);
-
+router.post("/forgot-password", (0, base_validation_1.validate)(user_validation_1.forgotPasswordSchema, "body"), auth_controller_1.AuthController.forgotPassword);
 /**
  * @swagger
  * /api/v1/reset-password:
@@ -269,6 +265,5 @@ router.post("/forgot-password", validate(forgotPasswordSchema, "body"), AuthCont
  *                   type: string
  *                   example: "Invalid code"
  */
-router.post("/reset-password", validate(resetPasswordSchema, "body"), AuthController.resetPassword);
-
-export default router;
+router.post("/reset-password", (0, base_validation_1.validate)(user_validation_1.resetPasswordSchema, "body"), auth_controller_1.AuthController.resetPassword);
+exports.default = router;
