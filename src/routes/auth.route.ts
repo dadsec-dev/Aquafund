@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth.controller";
 import { validate } from "../utils/validation/base.validation";
-import { loginSchema } from "../utils/validation/user.validation";
+import { loginSchema, forgotPasswordSchema, resetPasswordSchema } from "../utils/validation/user.validation";
 
 const router = Router();
 
@@ -169,5 +169,101 @@ router.post("/verify-otp", AuthController.verifyOTP);
  *                   example: "Invalid email or password"
  */
 router.post("/login", validate(loginSchema, "body"), AuthController.login);
+
+/**
+ * @swagger
+ * /api/v1/forgot-password:
+ *   post:
+ *     summary: Request a password reset OTP code
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *     responses:
+ *       200:
+ *         description: Password reset OTP sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset OTP sent successfully"
+ *       400:
+ *         description: Error sending password reset OTP
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "User does not exist"
+ */
+router.post("/forgot-password", validate(forgotPasswordSchema, "body"), AuthController.forgotPassword);
+
+/**
+ * @swagger
+ * /api/v1/reset-password:
+ *   post:
+ *     summary: Reset password using OTP code
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - otp
+ *               - newPassword
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@example.com"
+ *               otp:
+ *                 type: string
+ *                 example: "123456"
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 minLength: 8
+ *                 example: "newSecurePassword123"
+ *     responses:
+ *       200:
+ *         description: Password reset successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Password reset successfully"
+ *       400:
+ *         description: Password reset failed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Invalid code" or "Code expired" or "User does not exist"
+ */
+router.post("/reset-password", validate(resetPasswordSchema, "body"), AuthController.resetPassword);
 
 export default router;

@@ -32,4 +32,24 @@ export class OTPService {
     await prisma.otp.delete({ where: { id: record.id } });
     return { valid: true };
   }
+
+  static async sendPasswordResetOTP(email: string) {
+    const otpcode = generateOTP();
+    // Save OTP
+    await prisma.otp.create({
+      data: {
+        email,
+        code: otpcode,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+      },
+    });
+    // Send email
+    await mailer.sendMail({
+      from: `Your App <${process.env.MAIL_USER}>`,
+      to: email,
+      subject: "Password Reset Code",
+      html: `<p>Use this code to reset your password:</p><h2>${otpcode}</h2><p>This code expires in 5 minutes.</p>`,
+    });
+    return true;
+  }
 }

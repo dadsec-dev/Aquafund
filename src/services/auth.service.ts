@@ -58,4 +58,40 @@ export class AuthService {
       token,
     };
   }
+
+  static async forgotPassword(email: string) {
+    const trimmedEmail = email.trim();
+    
+    // Find user by email
+    const user = await prisma.user.findUnique({ where: { email: trimmedEmail } });
+    if (!user) throw new Error("User does not exist");
+
+    // Send OTP for password reset
+    await OTPService.sendPasswordResetOTP(trimmedEmail);
+    return "Password reset OTP sent successfully";
+  }
+
+  static async resetPassword(email: string, otp: string, newPassword: string) {
+    const trimmedEmail = email.trim();
+    const trimmedPassword = newPassword.trim();
+
+    // Verify OTP
+    const result = await OTPService.verifyOTP(trimmedEmail, otp);
+    if (!result.valid) throw new Error(result.message);
+
+    // Find user by email
+    const user = await prisma.user.findUnique({ where: { email: trimmedEmail } });
+    if (!user) throw new Error("User does not exist");
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
+
+    // Update password
+    await prisma.user.update({
+      where: { email: trimmedEmail },
+      data: { password: hashedPassword },
+    });
+
+    return "Password reset successfully";
+  }
 }
