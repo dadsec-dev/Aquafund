@@ -14,6 +14,12 @@ model User {
   role      UserRole @default(NGO)
   status    UserStatus @default(PENDING)
 
+  // Web3 Authentication fields
+  walletAddress String?  @unique
+  nonce         String?
+  nonceIssuedAt DateTime?
+  nonceExpiresAt DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

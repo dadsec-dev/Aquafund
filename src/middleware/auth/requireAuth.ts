@@ -7,8 +7,10 @@ declare global {
     interface Request {
       user?: {
         userId: string;
-        email: string;
+        email?: string;
         role: string;
+        address?: string;
+        authType?: string;
       };
     }
   }
@@ -32,13 +34,22 @@ export default function requireAuth(
     const decoded = jwt.verify(
       token,
       process.env.JWT_SECRET || "your-secret-key"
-    ) as { userId: string; email: string; role: string };
+    ) as {
+      userId: string;
+      email?: string;
+      role: string;
+      address?: string;
+      authType?: string;
+    };
 
     // Attach user info to request object
+    // Support both traditional email/password auth and Web3 auth
     req.user = {
       userId: decoded.userId,
       email: decoded.email,
       role: decoded.role,
+      address: decoded.address, // For Web3 auth
+      authType: decoded.authType, // 'web3' or undefined for traditional
     };
 
     next();
