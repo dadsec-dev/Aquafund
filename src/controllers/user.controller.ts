@@ -33,12 +33,15 @@ class UserController {
     async listUsers(req: Request, res: Response) {
         try {
             const users = await userService.listUsers();
-            // Format users to include ngo field for NGO users
+            // Format users to include ngo field (always present, null if no NGO)
             const formattedUsers = users.map((user: any) => {
                 const { ngos, ...userWithoutNgos } = user;
                 const response: any = userWithoutNgos;
-                if (user.role === "NGO" && ngos && ngos.length > 0) {
-                    response.ngo = ngos[0]; // Include the first NGO
+                // Always include ngo field, set to null if user doesn't have NGOs
+                if (user.role === "NGO") {
+                    response.ngo = ngos && ngos.length > 0 ? ngos[0] : null;
+                } else {
+                    response.ngo = null;
                 }
                 return response;
             });
@@ -54,11 +57,14 @@ class UserController {
             const user = await userService.getUserById(id);
             if (!user) return res.status(404).json({ success: false, message: "User not found" });
             
-            // Format user to include ngo field for NGO users
+            // Format user to include ngo field (always present, null if no NGO)
             const { ngos, ...userWithoutNgos } = user as any;
             const response: any = userWithoutNgos;
-            if (user.role === "NGO" && ngos && ngos.length > 0) {
-                response.ngo = ngos[0]; // Include the first NGO
+            // Always include ngo field, set to null if user doesn't have NGOs
+            if (user.role === "NGO") {
+                response.ngo = ngos && ngos.length > 0 ? ngos[0] : null;
+            } else {
+                response.ngo = null;
             }
             
             return res.json({ success: true, data: response });

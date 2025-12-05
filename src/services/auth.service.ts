@@ -57,14 +57,17 @@ export class AuthService {
     // Return user data (without password) and token
     const { password: _, ngos, ...userWithoutPassword } = user;
     
-    // Include NGO data if user role is NGO and has NGOs
+    // Include NGO data - always include ngo field, null if no NGO exists
     const response: any = {
       user: userWithoutPassword,
       token,
     };
 
-    if (user.role === "NGO" && ngos && ngos.length > 0) {
-      response.ngo = ngos[0]; // Include the first NGO
+    // Always include ngo field, set to null if user doesn't have NGOs
+    if (user.role === "NGO") {
+      response.ngo = ngos && ngos.length > 0 ? ngos[0] : null;
+    } else {
+      response.ngo = null;
     }
 
     return response;
