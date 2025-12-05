@@ -25,6 +25,13 @@ class NgoService {
         return prisma.nGO.findUnique({ where: { id } });
     }
 
+    async getNgosByUserId(userId: string): Promise<NGO[]> {
+        return prisma.nGO.findMany({ 
+            where: { userId },
+            orderBy: { organizationName: "asc" }
+        });
+    }
+
     async updateNgo(id: string, data: Prisma.NGOUpdateInput): Promise<NGO> {
         try {
             return await prisma.nGO.update({ where: { id }, data });
