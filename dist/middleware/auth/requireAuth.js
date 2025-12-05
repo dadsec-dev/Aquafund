@@ -15,10 +15,13 @@ function requireAuth(req, res, next) {
     try {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET || "your-secret-key");
         // Attach user info to request object
+        // Support both traditional email/password auth and Web3 auth
         req.user = {
             userId: decoded.userId,
             email: decoded.email,
             role: decoded.role,
+            address: decoded.address, // For Web3 auth
+            authType: decoded.authType, // 'web3' or undefined for traditional
         };
         next();
     }
