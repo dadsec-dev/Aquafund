@@ -3,6 +3,7 @@ import { AuthController } from "../controllers/auth.controller";
 import { validate } from "../utils/validation/base.validation";
 import { loginSchema, forgotPasswordSchema, resetPasswordSchema } from "../utils/validation/user.validation";
 
+
 const router = Router();
 
 /**
