@@ -33,7 +33,16 @@ class UserController {
     async listUsers(req: Request, res: Response) {
         try {
             const users = await userService.listUsers();
-            return res.json({ success: true, data: users });
+            // Format users to include ngo field for NGO users
+            const formattedUsers = users.map((user: any) => {
+                const { ngos, ...userWithoutNgos } = user;
+                const response: any = userWithoutNgos;
+                if (user.role === "NGO" && ngos && ngos.length > 0) {
+                    response.ngo = ngos[0]; // Include the first NGO
+                }
+                return response;
+            });
+            return res.json({ success: true, data: formattedUsers });
         } catch (error: any) {
             return res.status(500).json({ success: false, message: "Failed to list users" });
         }
@@ -44,7 +53,15 @@ class UserController {
             const { id } = req.params;
             const user = await userService.getUserById(id);
             if (!user) return res.status(404).json({ success: false, message: "User not found" });
-            return res.json({ success: true, data: user });
+            
+            // Format user to include ngo field for NGO users
+            const { ngos, ...userWithoutNgos } = user as any;
+            const response: any = userWithoutNgos;
+            if (user.role === "NGO" && ngos && ngos.length > 0) {
+                response.ngo = ngos[0]; // Include the first NGO
+            }
+            
+            return res.json({ success: true, data: response });
         } catch (error: any) {
             return res.status(500).json({ success: false, message: "Failed to fetch user" });
         }

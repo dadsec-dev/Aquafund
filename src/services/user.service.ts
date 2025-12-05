@@ -19,12 +19,18 @@ class UserService {
     }
 
     async listUsers(): Promise<User[]> {
-        const users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
+        const users = await prisma.user.findMany({ 
+            orderBy: { createdAt: "desc" },
+            include: { ngos: true }
+        });
         return users;
     }
 
     async getUserById(id: string): Promise<User | null> {
-        const user = await prisma.user.findUnique({ where: { id } });
+        const user = await prisma.user.findUnique({ 
+            where: { id },
+            include: { ngos: true }
+        });
         return user;
     }
 

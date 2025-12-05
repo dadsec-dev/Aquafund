@@ -31,8 +31,11 @@ export class AuthService {
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
 
-    // Find user by email
-    const user = await prisma.user.findUnique({ where: { email: trimmedEmail } });
+    // Find user by email with NGO relation included
+    const user = await prisma.user.findUnique({ 
+      where: { email: trimmedEmail },
+      include: { ngos: true }
+    });
     if (!user) throw new Error("Invalid email or password");
 
     // Check if account is approved
@@ -52,11 +55,19 @@ export class AuthService {
     );
 
     // Return user data (without password) and token
-    const { password: _, ...userWithoutPassword } = user;
-    return {
+    const { password: _, ngos, ...userWithoutPassword } = user;
+    
+    // Include NGO data if user role is NGO and has NGOs
+    const response: any = {
       user: userWithoutPassword,
       token,
     };
+
+    if (user.role === "NGO" && ngos && ngos.length > 0) {
+      response.ngo = ngos[0]; // Include the first NGO
+    }
+
+    return response;
   }
 
   static async forgotPassword(email: string) {
